@@ -9,12 +9,9 @@ public class Main {
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringBuilder sb = new StringBuilder();
-				
+						
 		long num = Integer.parseInt(br.readLine());
-		
-		sb.append(((1 + num + 3*(num*(num+1)) /2) % 45678));
-		
+				
 		bw.write(String.valueOf(((1 + num + 3*(num*(num+1)) /2) % 45678)));
 		bw.flush();
 		
