@@ -1,36 +1,26 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		int L = Integer.parseInt(st.nextToken());
-		
-		int[] friends = new int[N];
-		
-		int idx = 0;
-		int cnt = 0;
-		
-		while(friends[idx]+1 != M) {
-			friends[idx]++;
-			if(friends[idx] % 2 == 1) {
-				idx += L;
-				if(idx >= N) idx -= N;
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int N = sc.nextInt();
+		int M = sc.nextInt();
+		int L = sc.nextInt();
+		int[] count = new int[N];
+		int index = 0;
+		count[index] = 1;
+		int ball = 0;
+		while(count[index]<M) {
+			ball++;
+			if(count[index]%2==0) {
+				index = (N+index-L)%N;
+				count[index]++;
 			} else {
-				idx -= L;
-				if(idx < 0) idx += N;
+				index = (index+L)%N;
+				count[index]++;
 			}
-			cnt++;
 		}
-		
-		System.out.println(cnt);
-
+		System.out.println(ball);
 	}
+
 }
