@@ -1,22 +1,26 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.util.Scanner;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			
-		int mushroom = 0;
-		
-		for(int i = 0; i < 10; i++) {
-			int temp = Integer.parseInt(br.readLine());
-			if(Math.abs(100-mushroom) >= Math.abs(100-mushroom-temp)) {
-				mushroom += temp;
-			}else {
-				break;
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int[] arr = new int[10];
+		for(int i = 0;i<10;i++) {
+			arr[i] = sc.nextInt();
+		}
+		int sum = 0;
+		for(int i = 0;i<10;i++) {
+			int temp = sum;
+			sum += arr[i];
+			if(sum>=100) {
+				if((100-temp)>=(sum-100)) {
+					System.out.println(sum);
+				} else {
+					System.out.println(temp);
+				}
+				return;
 			}
 		}
-		
-		System.out.println(mushroom);
+		System.out.println(sum);
 	}
+
 }
