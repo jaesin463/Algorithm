@@ -1,34 +1,26 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.Scanner;
 
 public class Main {
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-			
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		
-		int N = Integer.parseInt(st.nextToken());
-		int k = Integer.parseInt(st.nextToken());
-		
-		double[][] student = new double[2][7];
-		
-		int room = 0;
-		
-		for(int i = 0; i < N; i++) {
-			st = new StringTokenizer(br.readLine());
-			int MW = Integer.parseInt(st.nextToken());
-			int grade = Integer.parseInt(st.nextToken());
-			student[MW][grade]++;
-		}
-		
-		for(int i = 0; i < 2; i++) {
-			for(int j = 1; j < 7; j++) {
-				room += Math.ceil(student[i][j] / k);
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		int N = sc.nextInt();
+		int K = sc.nextInt();
+		int[] girl = new int[6];
+		int[] boy = new int[6];
+		for(int i = 0;i<N;i++) {
+			int S = sc.nextInt();
+			int Y = sc.nextInt();
+			if(S==0) {
+				girl[Y-1]++;
+			} else {
+				boy[Y-1]++;
 			}
 		}
-		
-		System.out.print(room);
+		int room = 0;
+		for(int i = 0;i<6;i++) {
+			room += Math.ceil(girl[i]/(double)K);
+			room += Math.ceil(boy[i]/(double)K);
+		}
+		System.out.println(room);
 	}
 }
