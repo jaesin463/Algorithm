@@ -39,25 +39,27 @@ public class Main {
     }
 
     static void BFS(int r, int c) {
-	// BFS는 큐로 구현
 	Queue<int[]> queue = new LinkedList<>();
-	// 지금 방문 중인 노드 추가
+	// 최초 좌표 큐에 삽입 및 방문 처리
 	queue.offer(new int[] { r, c });
-	// 방문 처리
 	visited[r][c] = true;
 
 	while (!queue.isEmpty()) {
-	    // 제일 앞에 있는 노드
+	    //이번에 방문할 노드
 	    int[] now = queue.poll();
-	    // 연결 된 노드들을 큐에 추가
+	    //사방을 탐색
 	    for (int i = 0; i < 4; i++) {
 		int x = now[0] + dr[i];
 		int y = now[1] + dc[i];
-
+		//범위를 벗어 나지 않은 경우
 		if (x >= 0 && x < N && y >= 0 && y < M) {
+		    //아직 방문하지 않은 좌표이고, 길이 맞는 경우
 		    if (!visited[x][y] && miro[x][y] != 0) {
+			//방문처리
 			visited[x][y] = true;
+			//cnt의 역할, 매번 1씩 증가하며 최종 N,M에 숫자가 정해짐
 			miro[x][y] = miro[now[0]][now[1]] + 1;
+			//좀 있다 (x, y)에 대해서도 사방 탐색해야 되니까 큐에 삽입
 			queue.offer(new int[] { x, y });
 		    }
 		}
