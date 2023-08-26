@@ -1,255 +1,187 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
+	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+	static StringBuilder sb = new StringBuilder();
+	static StringTokenizer st;
+	static int N = 3;
+	static char[][] up = new char[3][3];
+	static char[][] down = new char[3][3];
+	static char[][] front = new char[3][3];
+	static char[][] back = new char[3][3];
+	static char[][] left = new char[3][3];
+	static char[][] right = new char[3][3];
 
-	public static char[][] up;
-	public static char[][] down;
-	public static char[][] front;
-	public static char[][] back;
-	public static char[][] left;
-	public static char[][] right;
-	
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		int TC = Integer.parseInt(br.readLine());
-		for(int test_case=1;test_case<=TC;test_case++) {
-			int n = Integer.parseInt(br.readLine());
-			String[] data = br.readLine().split(" ");
-			up = new char[][]{{'w', 'w', 'w'}, {'w', 'w', 'w'}, {'w', 'w', 'w'}};
-			down = new char[][]{{'y', 'y', 'y'}, {'y', 'y', 'y'}, {'y', 'y', 'y'}};
-			front = new char[][]{{'r', 'r', 'r'}, {'r', 'r', 'r'}, {'r', 'r', 'r'}};
-			back = new char[][]{{'o', 'o', 'o'}, {'o', 'o', 'o'}, {'o', 'o', 'o'}};
-			left = new char[][]{{'g', 'g', 'g'}, {'g', 'g', 'g'}, {'g', 'g', 'g'}};
-			right = new char[][]{{'b', 'b', 'b'}, {'b', 'b', 'b'}, {'b', 'b', 'b'}};
-			
-			for(int i=0;i<n;i++) {
-				String str = data[i];
-				char move = str.charAt(0);
-				char dir = str.charAt(1);
-				if(move == 'U') {
-					rotate_U(dir);
-				} else if(move == 'D') {
-					rotate_D(dir);
-				} else if(move == 'F') {
-					rotate_F(dir);
-				} else if(move == 'B') {
-					rotate_B(dir);
-				} else if(move == 'L') {
-					rotate_L(dir);
-				} else if(move == 'R') {
-					rotate_R(dir);
-				}
-				
-				
-			}
-					
-			for(int i=0;i<3;i++) {
-				for(int j=0;j<3;j++) {
-					sb.append(up[i][j]);
-				}
-				sb.append("\n");
-			}
-		}
-		System.out.println(sb.toString());
-	}
-	
-	public static void rotate_U(char dir) {
-		
-		if(dir == '+') {
-			up = rotate1(up);
-			char[] temp = back[0];
-			back[0] = left[0];
-			left[0] = front[0];
-			front[0] = right[0];
-			right[0] = temp;
+	static void upRotate(char direction) {
+		char[] tempB = back[0].clone();
+		if (direction == '+') {
+			up = clockWise(up);
 
-			// 뒷 - 오 - 앞 - 왼 - 뒷
-			
-		} else {
+			back[0] = left[0].clone();
 
-			up = rotate2(up);
-			// 뒷 - 왼 - 앞 - 오 - 뒷 
-			char[] temp = back[0].clone();
+			left[0] = front[0].clone();
+
+			front[0] = right[0].clone();
+
+			right[0] = tempB;
+		} else if (direction == '-') {
+			up = counterClockWise(up);
+
 			back[0] = right[0].clone();
+
 			right[0] = front[0].clone();
+
 			front[0] = left[0].clone();
-			left[0] = temp;
+
+			left[0] = tempB;
 		}
 	}
-	
-	public static void rotate_D(char dir) {
-		if(dir == '+') {
-			down = rotate1(down);
-			// 뒷 - 왼 - 앞 - 오 - 뒷 
-			char[] temp = back[2].clone();
+
+	static void downRotate(char direction) {
+		char[] tempB = back[2].clone();
+		if (direction == '+') {
+			down = clockWise(down);
 			back[2] = right[2].clone();
+
 			right[2] = front[2].clone();
+
 			front[2] = left[2].clone();
-			left[2] = temp;
-		} else {
-			down = rotate2(down);
-			// 뒷 - 오 - 앞 - 왼 - 뒷
-			char[] temp = back[2].clone();
+
+			left[2] = tempB;
+
+		} else if (direction == '-') {
+			down = counterClockWise(down);
+			
 			back[2] = left[2].clone();
+
 			left[2] = front[2].clone();
+
 			front[2] = right[2].clone();
-			right[2] = temp;
+
+			right[2] = tempB;
 		}
 	}
-	
-	public static void rotate_F(char dir) {
-		if(dir == '+') {
-			front = rotate1(front);
-			// 윗 - 오 - 바 - 왼 - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[2][i];
-			}
-			
-			for(int i=0;i<3;i++) {
-				up[2][i] = left[2-i][2];
+
+	static void frontRotate(char direction) {
+		char[] tempU = { up[2][0], up[2][1], up[2][2] };
+		if (direction == '+') {
+			front = clockWise(front);
+			for (int i = 0; i < 3; i++) {
+				up[2][i] = left[2 - i][2];
 			}
 
-			for(int i=0;i<3;i++) {
-				left[i][2] = down[2][2-i];
+			for (int i = 0; i < 3; i++) {
+				left[i][2] = down[2][2 - i];
 			}
-			
-			for(int i=0;i<3;i++) {
+
+			for (int i = 0; i < 3; i++) {
 				down[2][i] = right[i][0];
 			}
-			
-			for(int i=0;i<3;i++) {
-				right[i][0] = temp[i];
+
+			for (int i = 0; i < 3; i++) {
+				right[i][0] = tempU[i];
 			}
-			
-			
-			
-		} else {
-			front = rotate2(front);
-			// 윗 - 왼 - 바 - 오 - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[2][2-i];
-			}
-	
-			for(int i=0;i<3;i++) {
+		} else if (direction == '-') {
+			front = counterClockWise(front);
+
+			for (int i = 0; i < 3; i++) {
 				up[2][i] = right[i][0];
 			}
 
-			for(int i=0;i<3;i++) {
+			for (int i = 0; i < 3; i++) {
 				right[i][0] = down[2][i];
 			}
-			
 
-			for(int i=0;i<3;i++) {
-				down[2][i] = left[2-i][2];
+			for (int i = 0; i < 3; i++) {
+				down[2][i] = left[2 - i][2];
 			}
 
-			for(int i=0;i<3;i++) {
-				left[i][2] = temp[i];
+			for (int i = 0; i < 3; i++) {
+				left[i][2] = tempU[2 - i];
 			}
-			
 		}
 	}
-	
-	public static void rotate_B(char dir) {
-		if(dir == '+') {
-			back = rotate1(back);
-			// 윗 - 왼 - 바 - 오 - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[0][2-i];
-			}
-			for(int i=0;i<3;i++) {
+
+	static void backRotate(char direction) {
+		char[] tempU = { up[0][2], up[0][1], up[0][0] };
+		if (direction == '+') {
+			back = clockWise(back);
+
+			for (int i = 0; i < 3; i++) {
 				up[0][i] = right[i][2];
 			}
-			for(int i=0;i<3;i++) {
+			for (int i = 0; i < 3; i++) {
 				right[i][2] = down[0][i];
 			}
-			for(int i=0;i<3;i++) {
-				down[0][i] = left[2-i][0];
+			for (int i = 0; i < 3; i++) {
+				down[0][i] = left[2 - i][0];
 			}
-			for(int i=0;i<3;i++) {
-				left[i][0] = temp[i];
+			for (int i = 0; i < 3; i++) {
+				left[i][0] = tempU[i];
 			}
-			
-		} else {
-			back = rotate2(back);
-			// 윗 - 오 - 바 - 왼 - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[0][i];
-			}
+		} else if (direction == '-') {
+			back = counterClockWise(back);
 
-			for(int i=0;i<3;i++) {
-				up[0][i] = left[2-i][0];
+			for (int i = 0; i < 3; i++) {
+				up[0][i] = left[2 - i][0];
 			}
-			for(int i=0;i<3;i++) {
-				left[i][0] = down[0][2-i];
+			for (int i = 0; i < 3; i++) {
+				left[i][0] = down[0][2 - i];
 			}
-			for(int i=0;i<3;i++) {
+			for (int i = 0; i < 3; i++) {
 				down[0][i] = right[i][2];
 			}
-			for(int i=0;i<3;i++) {
-				right[i][2] = temp[i];
+			for (int i = 0; i < 3; i++) {
+				right[i][2] = tempU[2 - i];
 			}
 		}
 	}
-	
-	public static void rotate_L(char dir) {
-		if(dir == '+') {
-			left = rotate1(left);
-			// 윗 - 앞 - 바 - 뒷 - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[i][0];
+
+	static void leftRotate(char direction) {
+		char[] tempU = { up[0][0], up[1][0], up[2][0] };
+		if (direction == '+') {
+			left = clockWise(left);
+			
+			for (int i = 0; i < 3; i++) {
+				up[i][0] = back[2 - i][2];
 			}
-			for(int i=0;i<3;i++) {
-				up[i][0] = back[2-i][2];
-			}
-			for(int i=0;i<3;i++) {
+			for (int i = 0; i < 3; i++) {
 				back[i][2] = down[i][2];
 			}
-			for(int i=0;i<3;i++) {
-				down[i][2] = front[2-i][0];
+			for (int i = 0; i < 3; i++) {
+				down[i][2] = front[2 - i][0];
 			}
-			for(int i=0;i<3;i++) {
-				front[i][0] = temp[i];
+			for (int i = 0; i < 3; i++) {
+				front[i][0] = tempU[i];
 			}
-		} else {
-			left = rotate2(left);
-			// 윗 - 뒷 - 바 - 앞  - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[2-i][0];
-			}
-			for(int i=0;i<3;i++) {
+		} else if (direction == '-') {
+			left = counterClockWise(left);
+
+			for (int i = 0; i < 3; i++) {
 				up[i][0] = front[i][0];
 			}
-			for(int i=0;i<3;i++) {
-				front[i][0] = down[2-i][2];
+			for (int i = 0; i < 3; i++) {
+				front[i][0] = down[2 - i][2];
 			}
-			for(int i=0;i<3;i++) {
+			for (int i = 0; i < 3; i++) {
 				down[i][2] = back[i][2];
 			}
-			for(int i=0;i<3;i++) {
-				back[i][2] = temp[i];
+			for (int i = 0; i < 3; i++) {
+				back[i][2] = tempU[2 - i];
 			}
 		}
 	}
-	
-	public static void rotate_R(char dir) {
-		if(dir == '+') {
-			right = rotate1(right);
-			// 윗 - 뒷 - 바 - 앞  - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[2-i][2];
-			}
+
+	static void rightRotate(char direction) {
+		char[] tempU = { up[0][2], up[1][2], up[2][2] };
+		if (direction == '+') {
+			right = clockWise(right);
+
 			for(int i=0;i<3;i++) {
 				up[i][2] = front[i][2];
 			}
@@ -260,15 +192,12 @@ public class Main {
 				down[i][0] = back[i][0];
 			}
 			for(int i=0;i<3;i++) {
-				back[i][0] = temp[i];
+				back[i][0] = tempU[2 - i];
 			}
-		} else {
-			right = rotate2(right);
-			// 윗 - 앞 - 바 - 뒷 - 윗
-			char[] temp = new char[3];
-			for(int i=0;i<3;i++) {
-				temp[i] = up[i][2];
-			}
+
+		} else if (direction == '-') {
+			right = counterClockWise(right);
+
 			for(int i=0;i<3;i++) {
 				up[i][2] = back[2-i][0];
 			}
@@ -279,36 +208,101 @@ public class Main {
 				down[i][0] = front[2-i][2];
 			}
 			for(int i=0;i<3;i++) {
-				front[i][2] = temp[i];
+				front[i][2] = tempU[i];
 			}
 		}
 	}
-	
-	// 시계방향으로 90도 회전
-	public static char[][] rotate1(char[][] arr) {
-		char[][] rotate = new char[3][3];
-		for(int i=0;i<3;i++) {
-			for(int j=0;j<3;j++) {
-				rotate[i][j] = arr[3-1-j][i];
+
+	static char[][] clockWise(char[][] arr) {
+		char[][] temp = new char[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				temp[i][j] = arr[N - j - 1][i];
 			}
 		}
-		
-		return rotate;
+		return temp;
 	}
 	
-	// 반시계 방향으로 90도 회전
-	public static char[][] rotate2(char[][] arr) {
-		char[][] rotate = new char[3][3];
-		for(int i=0;i<3;i++) {
-			for(int j=0;j<3;j++) {
-				rotate[i][j] = arr[j][3-1-i];
+	static char[][] counterClockWise(char[][] arr) {
+		char[][] temp = new char[N][N];
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < N; j++) {
+				temp[i][j] = arr[j][N - i - 1];
 			}
 		}
-		
-		return rotate;
+		return temp;
 	}
 	
+	static void makeBoard() throws IOException {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				up[i][j] = 'w';
+				down[i][j] = 'y';
+				front[i][j] = 'r';
+				back[i][j] = 'o';
+				left[i][j] = 'g';
+				right[i][j] = 'b';
+			}
+		}
+	}
 
+	static void rotate() throws IOException {
+		int R = init(br.readLine());
+		st = new StringTokenizer(br.readLine());
+		for (int i = 0; i < R; i++) {
+			String oper = st.nextToken();
+			char loc = oper.charAt(0);
+			char direc = oper.charAt(1);
+			if (loc == 'U') {
+				upRotate(direc);
+			} else if (loc == 'D') {
+				downRotate(direc);
+			} else if (loc == 'F') {
+				frontRotate(direc);
+			} else if (loc == 'B') {
+				backRotate(direc);
+			} else if (loc == 'L') {
+				leftRotate(direc);
+			} else if (loc == 'R') {
+				rightRotate(direc);
+			}
+		}
+	}
 
+	public static void main(String[] args) throws IOException {
+		int test_case = init(br.readLine());
+		for (int tc = 1; tc <= test_case; tc++) {
+			makeBoard();
+			rotate();
+			check(up);
+		}
+		System.out.println(sb.toString());
+	}
 
+	static int init(String str) {
+		return Integer.parseInt(str);
+	}
+
+	static int init(char c) {
+		return c - '0';
+	}
+
+	static void check(int[][] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr[0].length; j++) {
+				System.out.print(arr[i][j] + "\t");
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+
+	static void check(char[][] arr) {
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				sb.append(arr[i][j]);
+			}
+			sb.append("\n");
+		}
+	}
 }
