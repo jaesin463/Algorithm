@@ -1,9 +1,5 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -11,6 +7,7 @@ public class Main {
 	static StringTokenizer st;
 	static ArrayList<Integer>[] island;
 	static int N;
+	// 마릿 수 <= 10^9(십억단위)
 	static long count[];
 
 	static void solution(int child, int parent) {
@@ -19,8 +16,12 @@ public class Main {
 			solution(next, child);
 		}
 
-		// 최상위 노드 (1번 섬 제외)
+		// 최하위 노드에 도착하고 나면 한단계 씩 올라오면서 계산이 시작됨
+		
+		// 최상위 노드 (1번 섬) 제외
 		if (parent != -1) {
+			// 현재까지 값이 음수가 아닌 경우
+			// 음수라면 지금까지 결과를 버리고 상위 노드에서 양이 다시 나올 때까지 계산을 안해도 됨
 			if (count[child] > 0) {
 				count[parent] += count[child];
 			}
@@ -39,12 +40,14 @@ public class Main {
 
 		for (int i = 2; i < N + 1; i++) {
 			st = new StringTokenizer(br.readLine());
+			// 동물 종류
 			char ani = st.nextToken().charAt(0);
+			// 마릿 수
 			int cnt = init(st);
+			// 연결 된 섬
 			int next = init(st);
-
 			island[next].add(i);
-
+			// 양이 살면 +cnt, 늑대가 살면 -cnt
 			count[i] = ani == 'S' ? cnt : -cnt;
 		}
 	}
@@ -61,9 +64,5 @@ public class Main {
 
 	static int init(StringTokenizer st) {
 		return Integer.parseInt(st.nextToken());
-	}
-
-	static int init(char c) {
-		return c - '0';
 	}
 }
