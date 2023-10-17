@@ -1,3 +1,4 @@
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,34 +6,39 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+// 메모리 33316 KB, 시간 292 ms
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder sb = new StringBuilder();
 	static StringTokenizer st;
 	static int N;
 	static int[][] cave;
+	// boolean 배열 대신에 사용하면 입력 여부 판단 가능
 	static Integer[][] dp;
+	static int[][] delta = { { 0, -1 }, { -1, 0 }, { 0, 1 }, { 1, 0 } };
 	static int[] dr = { 0, -1, 0, 1 };
 	static int[] dc = { -1, 0, 1, 0 };
 
 	static void bfs() {
-		Queue<int[]> q = new LinkedList<>();
-		q.add(new int[] { 0, 0 });
-		dp[0][0] = 0;
+		Queue<Point> q = new LinkedList<>();
+		q.add(new Point(0, 0));
+		dp[0][0] = cave[0][0];
 
 		while (!q.isEmpty()) {
-			int[] cur = q.poll();
-			int row = cur[0];
-			int col = cur[1];
-
+			Point cur = q.poll();
+			int row = cur.x;
+			int col = cur.y;
+			// 사방 탐색
 			for (int i = 0; i < 4; i++) {
-				int r = row + dr[i];
-				int c = col + dc[i];
-
-				if (r >= 0 && r < N && c >= 0 && c < N) {
-					if (dp[r][c] == null || dp[r][c] > dp[row][col] + cave[row][col]) {
-						dp[r][c] = dp[row][col] + cave[row][col];
-						q.add(new int[] { r, c });
+				int r = row + delta[i][0];
+				int c = col + delta[i][1];
+				// 인덱스 범위 내
+				if (index(r, c)) {
+					// 아직 방문하지 않았거나 더 좋은 경우의 수이면
+					if (dp[r][c] == null || dp[r][c] > dp[row][col] + cave[r][c]) {
+						// dp값을 초기화 후 방문
+						dp[r][c] = dp[row][col] + cave[r][c];
+						q.add(new Point(r, c));
 					}
 				}
 			}
@@ -41,7 +47,7 @@ public class Main {
 
 	static void solution() throws IOException {
 		bfs();
-		sb.append(dp[N - 1][N - 1] + cave[N - 1][N - 1]);
+		sb.append(dp[N - 1][N - 1]);
 	}
 
 	static void make() throws IOException {
@@ -69,6 +75,12 @@ public class Main {
 			sb.append("\n");
 		}
 		System.out.println(sb);
+	}
+
+	static boolean index(int r, int c) {
+		if (r >= 0 && r < N && c >= 0 && c < N)
+			return true;
+		return false;
 	}
 
 	static int init() throws IOException {
