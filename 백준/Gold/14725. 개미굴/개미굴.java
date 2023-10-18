@@ -1,13 +1,7 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
+// 메모리 15928 KB, 시간  292 ms
 public class Main {
 	static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 	static StringBuilder sb;
@@ -34,6 +28,21 @@ public class Main {
 			}
 		}
 
+		public void insert(StringTokenizer st) {
+			// 시작은 루트노드
+			// 루트 노드는 공백
+			TrieNode trieNode = this;
+			String s;
+			// 이번에 입력 받은 먹이 정보 순회
+			while (st.hasMoreTokens()) {
+				s = st.nextToken();
+				// putIfAbsent(key, value) : 기존데이터에 key가 없으면 저장
+				trieNode.childNode.putIfAbsent(s, new TrieNode());
+				// 새로 생성된 trieNode를 가져오기
+				trieNode = trieNode.childNode.get(s);
+			}
+		}
+
 		public void print(TrieNode cur, int depth) {
 			// 이번에 뭘 출력할까
 			TrieNode trieNode = cur;
@@ -45,7 +54,7 @@ public class Main {
 				Collections.sort(list);
 				// list를 순회하며 dfs 형식의 재귀 탐색
 				for (String str : list) {
-					// 현재 차수에 따라 "--" 출력 
+					// 현재 차수에 따라 "--" 출력
 					for (int i = 0; i < depth; i++) {
 						System.out.print("--");
 					}
@@ -62,16 +71,11 @@ public class Main {
 		int N = init();
 
 		for (int i = 0; i < N; i++) {
-			sb = new StringBuilder();
 			st = new StringTokenizer(br.readLine());
 			// 먹이 정보 개수
 			int K = init(st);
 
-			for (int j = 0; j < K; j++) {
-				sb.append(st.nextToken()).append(",");
-			}
-
-			trie.insert(sb.toString());
+			trie.insert(st);
 		}
 	}
 
