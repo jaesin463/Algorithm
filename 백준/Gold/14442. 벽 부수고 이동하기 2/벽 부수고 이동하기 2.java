@@ -18,7 +18,7 @@ public class Main {
 
 	static void escape() {
 		Queue<Wall> q = new LinkedList<>();
-		visited = new boolean[N][M][K + 1];
+		visited = new boolean[K + 1][N][M];
 
 		q.add(new Wall(0, 0, 1, 0));
 		visited[0][0][0] = true;
@@ -41,13 +41,13 @@ public class Main {
 
 				if (index(dr, dc)) {
 					if (map[dr][dc] == 1) {
-						if (crack < K && !visited[dr][dc][crack]) {
-							visited[dr][dc][crack] = true;
+						if (crack < K && !visited[crack][dr][dc]) {
+							visited[crack][dr][dc] = true;
 							q.add(new Wall(dr, dc, dis + 1, crack + 1));
 						}
 					} else {
-						if (!visited[dr][dc][crack]) {
-							visited[dr][dc][crack] = true;
+						if (!visited[crack][dr][dc]) {
+							visited[crack][dr][dc] = true;
 							q.add(new Wall(dr, dc, dis + 1, crack));
 						}
 					}
