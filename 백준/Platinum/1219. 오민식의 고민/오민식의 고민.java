@@ -7,10 +7,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.StringTokenizer;
 
+// 메모리 : 11888 KB, 시간 : 80ms
 class Bus {
 	int from; // 나가는 정점
 	int to; // 들어오는 정점
-	int cost;
+	int cost; // 정산 금액
 
 	public Bus(int from, int to, int cost) {
 		this.from = from;
@@ -52,8 +53,6 @@ public class Main {
 				if (money[b.from] != INF && money[b.to] < money[b.from] + b.cost) {
 					money[b.to] = money[b.from] + b.cost;
 				}
-
-//				System.out.println(Arrays.toString(money));
 			}
 		}
 
@@ -74,17 +73,11 @@ public class Main {
 
 	// 양수 가중치 확인
 	public static boolean plus_cycle(long[] money) {
-		long save = money[cityB];
-		for (int j = 0; j < 2; j++) {
-			for (int i = 0; i < M; i++) {
-				Bus b = graph.get(i); // 현재 간선
-				// 현재 간선의 들어오는 정점에 대해 비교 -> 더 큰 값 생기면 양수 사이클 존재
-				// 이미 도착 도시에 도착이 가능한 상황이라 그냥 리턴 해도 될 것 같은데
-				// 혹시 몰라서 확인하고 리턴함
-				if (money[b.from] != INF && money[b.to] < money[b.from] + b.cost) {
-					money[b.to] = money[b.from] + b.cost;
-					bus.add(b);
-				}
+		for (int i = 0; i < M; i++) {
+			Bus b = graph.get(i); // 현재 간선
+			if (money[b.from] != INF && money[b.to] < money[b.from] + b.cost) {
+				money[b.to] = money[b.from] + b.cost;
+				bus.add(b);
 			}
 		}
 
@@ -93,6 +86,7 @@ public class Main {
 		return false;
 	}
 
+	// 양수 사이클이 도착 지점에 영향을 주는지 확인
 	public static boolean check_INF() {
 		boolean visited[] = new boolean[M];
 		while (!bus.isEmpty()) {
