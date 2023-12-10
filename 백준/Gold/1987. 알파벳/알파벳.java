@@ -1,64 +1,53 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.StringTokenizer;
 
 public class Main {
-	static int row, col;
-	static int[][] board;
-	static boolean[] visit = new boolean[26];
-	static int[] dr = { 1, -1, 0, 0 };
-	static int[] dc = { 0, 0, 1, -1 };
-	static int max = 0;
-
-	static void DFS(int a, int b, int cnt) {
-		if (visit[board[a][b]]) {
-			max = Math.max(max, cnt);
-			return;
-		} else {
-			visit[board[a][b]] = true;
-			for (int i = 0; i < 4; i++) {
-				int x = a + dr[i];
-				int y = b + dc[i];
-
-				if (x >= 0 && x < row && y >= 0 && y < col) {
-					DFS(x, y, cnt + 1);
-				}
-			}
-			
-			visit[board[a][b]] = false;
-		}
-
-	}
+	static int R;
+	static int C;
+	static char[][] board;
+	static boolean[] alphabets = new boolean[26];
+	static int max = Integer.MIN_VALUE;
+	static int[] dr = { -1, 1, 0, 0 };
+	static int[] dc = { 0, 0, -1, 1 };
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-
-		st = new StringTokenizer(br.readLine());
-
-		row = init(st.nextToken());
-		col = init(st.nextToken());
-
-		board = new int[row][col];
-
-		for (int i = 0; i < row; i++) {
-			String str = br.readLine();
-			for (int j = 0; j < col; j++) {
-				board[i][j] = init(str.charAt(j));
+		StringTokenizer st = new StringTokenizer(br.readLine());
+		R = Integer.parseInt(st.nextToken());
+		C = Integer.parseInt(st.nextToken());
+		board = new char[R][C];
+		
+		for (int i = 0; i < R; i++) {
+			String s = br.readLine();
+			for (int j = 0; j < C; j++) {
+				board[i][j] = s.charAt(j);
 			}
 		}
-
-		DFS(0, 0, 0);
-		
+		dfs(0, 0, 0);
 		System.out.println(max);
+
 	}
 
-	static int init(String str) {
-		return Integer.parseInt(str);
+	public static void dfs(int r, int c, int count) {
+		alphabets[board[r][c] - 'A'] = true;
+		count++;
+
+		if (count > max) {
+			max = count;
+		}
+		
+		for (int d = 0; d < 4; d++) {
+			int nr = r + dr[d];
+			int nc = c + dc[d];
+			if (nr >= 0 && nr < R && nc >= 0 && nc < C && !alphabets[board[nr][nc] - 'A']) {
+				dfs(nr, nc, count);
+				alphabets[board[nr][nc] - 'A'] = false;
+			}
+		}
+		
+
 	}
 
-	static int init(char c) {
-		return c - 'A';
-	}
 }
