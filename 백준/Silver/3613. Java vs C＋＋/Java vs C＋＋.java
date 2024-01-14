@@ -6,9 +6,19 @@ public class Main {
     static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
     static StringBuilder sb;
     static boolean isJava = false;
-    static boolean allOfLower = true;
+    static boolean isLowerCase = true;
 
-    public static boolean name_check() {
+    public static boolean isCpp() {
+        if (sb.charAt(sb.length() - 1) == '_') return false;
+        else if (sb.charAt(0) == '_') return false;
+        else return sb.indexOf("__") < 0;
+    }
+
+    public static boolean isJava() {
+        return sb.charAt(0) < 'A' || sb.charAt(0) > 'Z';
+    }
+
+    public static boolean errorCheck() {
         int isUpperCase = 0;
         int isUnderBar = 0;
 
@@ -19,24 +29,13 @@ public class Main {
             else if (ch == '_') isUnderBar = 1;
         }
 
-        allOfLower = isUnderBar != 1 && isUpperCase != 1;
+        isLowerCase = isUnderBar != 1 && isUpperCase != 1;
 
         // Java와 Cpp 형식을 혼용 했을때 false return
-        if ((isUnderBar & isUpperCase) == 0 || allOfLower) {
+        if ((isUnderBar & isUpperCase) == 0) {
             isJava = isUnderBar != 1;
             return true;
         } else return false;
-
-    }
-
-    public static boolean is_Cpp() {
-        if (sb.charAt(sb.length() - 1) == '_') return false;
-        else if (sb.charAt(0) == '_') return false;
-        else return sb.indexOf("__") < 0;
-    }
-
-    public static boolean is_Java() {
-        return sb.charAt(0) < 'A' || sb.charAt(0) > 'Z';
     }
 
     public static void javaToCpp() {
@@ -60,19 +59,18 @@ public class Main {
     }
 
     public static void solution() {
-        // Java, C++ 형식에 맞지 않을 경우
-        if (!(is_Cpp() && is_Java() && name_check())) {
+        // 어느 형식에도 포함되지 않는 경우
+        if (!(isCpp() && isJava() && errorCheck())) {
             System.out.println("Error!");
             return;
         }
 
         // 모든 문자가 소문자일 경우 그대로 return
-        if (allOfLower) {
+        if (isLowerCase) {
             System.out.println(sb);
             return;
         }
 
-        // true = java, false = Cpp
         if (isJava) javaToCpp();
         else cppToJava();
 
