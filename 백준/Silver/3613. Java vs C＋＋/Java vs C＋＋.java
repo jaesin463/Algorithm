@@ -19,21 +19,22 @@ public class Main {
     }
 
     public static boolean errorCheck() {
-        int isUpperCase = 0;
-        int isUnderBar = 0;
+        boolean isUpperCase = false;
+        boolean isUnderBar = false;
 
         for (int i = 0; i < sb.length(); i++) {
             char ch = sb.charAt(i);
 
-            if (ch >= 'A' && ch <= 'Z') isUpperCase = 1;
-            else if (ch == '_') isUnderBar = 1;
+            if (ch >= 'A' && ch <= 'Z') isUpperCase = true;
+            else if (ch == '_') isUnderBar = true;
         }
 
-        isLowerCase = isUnderBar != 1 && isUpperCase != 1;
+        // 대문자도 없고, 언더바도 없으면 다 소문자
+        isLowerCase = !isUnderBar && !isUpperCase;
 
-        // Java와 Cpp 형식을 혼용 했을때 false return
-        if ((isUnderBar & isUpperCase) == 0) {
-            isJava = isUnderBar != 1;
+        // Java와 Cpp 형식을 모두 사용한 경우 false
+        if (!(isUnderBar && isUpperCase)) {
+            isJava = !isUnderBar;
             return true;
         } else return false;
     }
