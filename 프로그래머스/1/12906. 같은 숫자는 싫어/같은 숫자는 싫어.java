@@ -1,8 +1,7 @@
 import java.util.*;
 
 public class Solution {
-    public Object[] solution(int []arr) {
-        Object[] answer = {};
+    public Stack<Integer> solution(int []arr) {
 
         Stack<Integer> stack = new Stack<>();
         for(int num : arr){
@@ -10,9 +9,7 @@ public class Solution {
                 stack.push(num);
             }
         }
-
-        answer = stack.stream().toArray();
-
-        return answer;
+        
+        return stack;
     }
 }
